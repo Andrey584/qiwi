@@ -1,5 +1,6 @@
 package qiwifiless3.demo.service;
 
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,11 +12,13 @@ import java.io.File;
 @Slf4j
 public class QfFileTransferService {
 
+    private volatile boolean isContinue = true;
+
     private final QFFileService qfFileService;
     private final QFAwsService qfAwsService;
 
     public void uploadFiles() {
-        while (true) {
+        while (isContinue) {
             File file = qfFileService.getFile();
             if (file != null) {
                 qfAwsService.upload(file);
@@ -29,5 +32,13 @@ public class QfFileTransferService {
                 }
             }
         }
+        log.info("Программа завершила свою работу.");
     }
+
+    @PreDestroy
+    public void stop() {
+        isContinue = false;
+    }
+
 }
+

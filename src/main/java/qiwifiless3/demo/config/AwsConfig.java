@@ -23,8 +23,6 @@ public class AwsConfig {
     private String awsRegion;
     @Value(value = "${aws.url.storage}")
     private String endpoint;
-    @Value(value = "${aws.bucket.name}")
-    private String bucketName;
 
     @Bean
     public AmazonS3 amazonS3client() {
