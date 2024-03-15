@@ -33,28 +33,11 @@ public class AwsConfig {
         ClientConfiguration clientConfig = new ClientConfiguration();
         clientConfig.setProtocol(Protocol.HTTP);
 
-        //AmazonS3Client con = new AmazonS3Client(credentials, clientConfig);
-        //S3ClientOptions options = S3ClientOptions.builder().setPathStyleAccess(true).build();
-        //con.setS3ClientOptions(options);
-        //con.setEndpoint(endpoint);
-
-        AmazonS3 s3client = AmazonS3ClientBuilder
+        return AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, awsRegion))
                 .build();
-
-        return s3client;
-
-        //      AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-        //                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, Regions.DEFAULT_REGION.getName()))
-        //                .build();
-
-
-        //return AmazonS3ClientBuilder.standard()
-        //        .withCredentials(new AWSStaticCredentialsProvider(credentials))
-        //        .withRegion(awsRegion)
-        //        .build();
     }
 }
 

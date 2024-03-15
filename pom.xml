@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>qiwi-files-s3</groupId>
-	<artifactId>demo</artifactId>
+	<artifactId>qf</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>qiwi-files-s3</name>
 	<description>qiwi</description>
@@ -20,7 +20,7 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
 
 		<dependency>

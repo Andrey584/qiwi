@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: spectrum-qf-aws-application
+aws:
+  path:
+    from: C:/Users/ashay/Desktop/local
+    into: C:/Users/ashay/Desktop/processed/
+  url:
+    storage: http://192.168.110.110:9000
+  bucket:
+    name: kiwi
+  accessKey: XY9grHx9CfFL32YU8vX0
+  secretKey: YZ579SrTZfvGbGyGOFJgFgNWSaelB3RkkoISGCOT
+  region: ap-southeast-1
