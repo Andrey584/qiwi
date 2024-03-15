@@ -16,9 +16,9 @@ import java.util.Objects;
 @Slf4j
 public class QFFileServiceImpl implements QFFileService {
 
-    @Value(value = "${aws.path.from}")
+    @Value(value = "${file.root-dir}")
     private String awsPathFrom;
-    @Value(value = "${aws.path.into}")
+    @Value(value = "${file.dest-dir}")
     private String awsPathTo;
 
     public QFFileServiceImpl() {

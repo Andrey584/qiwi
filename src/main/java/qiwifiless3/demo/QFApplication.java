@@ -24,4 +24,5 @@ public class QFApplication implements CommandLineRunner {
     public void run(String... args) {
         qfFileTransferService.uploadFiles();
     }
+
 }

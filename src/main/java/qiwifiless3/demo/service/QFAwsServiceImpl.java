@@ -13,10 +13,8 @@ import java.io.File;
 @Slf4j
 public class QFAwsServiceImpl implements QFAwsService {
 
-    @Value(value = "${aws.bucket.name}")
+    @Value(value = "${s3.bucket}")
     private String awsBucketName;
-    @Value(value = "${aws.path.into}")
-    private String awsPathInto;
 
     @Autowired
     private AmazonS3 amazonS3;

@@ -31,6 +31,7 @@ public class QfFileTransferService {
                     throw new RuntimeException(e);
                 }
             }
+
         }
         log.info("Программа завершила свою работу.");
     }
