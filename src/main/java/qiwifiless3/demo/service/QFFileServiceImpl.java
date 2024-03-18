@@ -1,7 +1,10 @@
 package qiwifiless3.demo.service;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -15,6 +18,11 @@ import java.util.Objects;
 @Service
 @Slf4j
 public class QFFileServiceImpl implements QFFileService {
+    private static final Logger logger = LoggerFactory.getLogger(QFFileServiceImpl.class);
+
+    private static final int MIN_LENGTH_PHONE_NUMBER = 8;
+    private static final int MAX_LENGTH_PHONE_NUMBER = 15;
+    private static final long MILLISECONDS_IN_ONE_MINUTE = 60000;
 
     @Value(value = "${file.root-dir}")
     private String awsPathFrom;
@@ -37,7 +45,11 @@ public class QFFileServiceImpl implements QFFileService {
     private File getAnyFile(File directory) {
         List<File> childFiles = List.of(Objects.requireNonNull(directory.listFiles()));
         for (File childFile : childFiles) {
-            if (childFile.isFile() && childFile.length() != 0) {
+            String fileName = childFile.getName();
+            if (childFile.isFile()
+                    && childFile.length() != 0
+                    && fileName.length() >= MIN_LENGTH_PHONE_NUMBER && fileName.length() <= MAX_LENGTH_PHONE_NUMBER
+                    && System.currentTimeMillis() - childFile.lastModified() > MILLISECONDS_IN_ONE_MINUTE) {
                 return childFile;
             }
         }
@@ -51,18 +63,14 @@ public class QFFileServiceImpl implements QFFileService {
 
     @Override
     public void move(File fileFrom) {
-        File fileTo = new File(awsPathTo + fileFrom.getName());
+        String fileName = fileFrom.getName();
+        File fileTo = new File(awsPathTo + fileName);
         try {
             FileUtils.moveFile(fileFrom, fileTo);
-            log.info("Файл с именем " + fileFrom.getName() + " успешно перемещен в папку processed.");
+            logger.info("Файл с именем " + fileName + " успешно перемещен в папку processed.");
         } catch (IOException e) {
-            log.error("Не удалось переместить файл с именем " + fileFrom.getName() + " в папку processed.");
-            try {
-                File deleteFile = new File(awsPathTo + fileFrom.getName());
-                FileUtils.delete(deleteFile);
-            } catch (IOException ex) {
-                //todo
-            }
+            //log.error("Не удалось переместить файл с именем " + fileName + " в папку processed.");
+            logger.error("Файл с именем " + fileName + " не удалось переместить в папку processed.");
         }
     }
 }
