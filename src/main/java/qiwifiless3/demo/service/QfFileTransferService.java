@@ -3,8 +3,10 @@ package qiwifiless3.demo.service;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 
 @Service
@@ -12,6 +14,7 @@ import java.io.File;
 @Slf4j
 public class QfFileTransferService {
 
+    private static final Logger logger = LoggerFactory.getLogger(QfFileTransferService.class);
     private volatile boolean isContinue = true;
 
     private final QFFileService qfFileService;
@@ -25,7 +28,7 @@ public class QfFileTransferService {
                 qfFileService.move(file);
             } else {
                 try {
-                    log.info("Нет подходящих файлов.");
+                    logger.info("Нет подходящих файлов.");
                     Thread.sleep(30000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -33,7 +36,7 @@ public class QfFileTransferService {
             }
 
         }
-        log.info("Программа завершила свою работу.");
+        logger.info("Программа завершила свою работу.");
     }
 
     @PreDestroy

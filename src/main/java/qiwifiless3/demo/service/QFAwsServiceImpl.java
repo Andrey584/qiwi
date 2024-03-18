@@ -3,6 +3,8 @@ package qiwifiless3.demo.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ import java.io.File;
 @Slf4j
 public class QFAwsServiceImpl implements QFAwsService {
 
+    private static final Logger logger = LoggerFactory.getLogger(QFAwsServiceImpl.class);
+
     @Value(value = "${s3.bucket}")
     private String awsBucketName;
 
@@ -22,7 +26,7 @@ public class QFAwsServiceImpl implements QFAwsService {
     @Override
     public void upload(File file) {
         amazonS3.putObject(new PutObjectRequest(awsBucketName, file.getName(), file));
-        log.info("Файл " + file.getName() + " успешно загружен в S3 хранилище.");
+        logger.info("Файл " + file.getName() + " успешно загружен в S3 хранилище.");
     }
 
 }
