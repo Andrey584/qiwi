@@ -64,13 +64,13 @@ public class QFFileServiceImpl implements QFFileService {
     @Override
     public void move(File fileFrom) {
         String fileName = fileFrom.getName();
+        long fileWights = fileFrom.length();
         File fileTo = new File(awsPathTo + fileName);
         try {
             FileUtils.moveFile(fileFrom, fileTo);
-            logger.info("Файл с именем " + fileName + " успешно перемещен в папку processed.");
+            logger.info("Файл с именем " + fileName + " весом " + fileWights + " байт успешно перемещен в папку processed.");
         } catch (IOException e) {
-            //log.error("Не удалось переместить файл с именем " + fileName + " в папку processed.");
-            logger.error("Файл с именем " + fileName + " не удалось переместить в папку processed.");
+            logger.error("Файл с именем " + fileName + " весом " + fileWights + " байт не удалось переместить в папку processed.");
         }
     }
 }
