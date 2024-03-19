@@ -2,11 +2,21 @@ spring:
   application:
     name: spectrum-qf-aws-application
 file:
-  root-dir: /home/user/project/local
-  dest-dir: /home/user/project/processed/
+  root-dir: C:/Users/ashay/Desktop/local
+  dest-dir: C:/Users/ashay/Desktop/processed/
 s3:
   url: http://192.168.110.110:9000
   bucket: kiwi
   accessKey: XY9grHx9CfFL32YU8vX0
   secretKey: YZ579SrTZfvGbGyGOFJgFgNWSaelB3RkkoISGCOT
   region: ap-southeast-1
+smb:
+  enabled: true
+  url: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/smb/
+  domain: it_spectrum.ru
+  username: jenkins
+  password: jenkins
+  service-name: smb-tst
+  dest-dir: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/processed/
+options:
+  delete-files: false

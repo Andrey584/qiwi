@@ -2,16 +2,13 @@ package qiwifiless3.demo.service;
 
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.File;
+import org.springframework.stereotype.Service;
+import qiwifiless3.demo.bean.QFFile;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class QfFileTransferService {
 
     private static final Logger logger = LoggerFactory.getLogger(QfFileTransferService.class);
@@ -22,19 +19,20 @@ public class QfFileTransferService {
 
     public void uploadFiles() {
         while (isContinue) {
-            File file = qfFileService.getFile();
-            if (file != null) {
-                qfAwsService.upload(file);
-                qfFileService.move(file);
-            } else {
+            QFFile file = qfFileService.getFile();
+            if (file == null) {
+                logger.info("Нет подходящих файлов.");
                 try {
-                    logger.info("Нет подходящих файлов.");
-                    Thread.sleep(30000);
+                    Thread.sleep(20000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+            } else {
+                if (file.getFile() != null || file.getSmbFile() != null) {
+                    qfAwsService.upload(file);
+                    qfFileService.move(file);
+                }
             }
-
         }
         logger.info("Программа завершила свою работу.");
     }
