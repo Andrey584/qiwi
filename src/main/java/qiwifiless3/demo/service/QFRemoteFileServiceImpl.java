@@ -62,12 +62,14 @@ public class QFRemoteFileServiceImpl implements QFFileService {
         String fileName = fileFrom.getName();
 
         smbPathTo = smbPathTo.endsWith("/") ? smbPathTo : smbPathTo + "/";
+
         SmbFile dateDestinationDir = null;
         try {
             dateDestinationDir = new SmbFile(smbPathTo + dateFolderName);
         } catch (MalformedURLException ignored) {
             logger.error("Ошибка при попытке указать путь файлу");
         }
+
         SmbFile fileTo2 = null;
         try {
             fileTo2 = new SmbFile(getPathTo(dateDestinationDir) + "/" + fileName);

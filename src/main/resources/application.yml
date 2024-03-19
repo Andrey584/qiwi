@@ -11,7 +11,7 @@ s3:
   secretKey: YZ579SrTZfvGbGyGOFJgFgNWSaelB3RkkoISGCOT
   region: ap-southeast-1
 smb:
-  enabled: true
+  enabled: false
   url: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/smb/
   domain: it_spectrum.ru
   username: jenkins
@@ -19,4 +19,4 @@ smb:
   service-name: smb-tst
   dest-dir: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/processed/
 options:
-  delete-files: false
+  delete-files: true
