@@ -22,19 +22,26 @@ public class QfFileTransferService {
             QFFile file = qfFileService.getFile();
             if (file == null) {
                 logger.info("Нет подходящих файлов.");
-                try {
-                    Thread.sleep(20000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                sleep();
             } else {
                 if (file.getFile() != null || file.getSmbFile() != null) {
                     qfAwsService.upload(file);
                     qfFileService.move(file);
+                } else {
+                    logger.info("Нет подходящих файлов.");
+                    sleep();
                 }
             }
         }
         logger.info("Программа завершила свою работу.");
+    }
+
+    private void sleep() {
+        try {
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PreDestroy
