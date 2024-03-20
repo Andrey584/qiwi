@@ -12,8 +12,7 @@ s3:
   region: ap-southeast-1
 smb:
   protocol:
-    minVersion: 2
-    maxVersion: 3
+    version: 2
   enabled: true
   from-dir: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/smb/
   domain: it-spectrum

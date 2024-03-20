@@ -1,4 +1,4 @@
-package qiwifiless3.demo.config;
+package spectrum.qf.config;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
