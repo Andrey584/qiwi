@@ -13,7 +13,7 @@ s3:
 smb:
   protocol:
     version: 2
-  enabled: false
+  enabled: true
   from-dir: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/smb/
   domain: it-spectrum
   username: jenkins
@@ -21,4 +21,4 @@ smb:
   service-name: smb-tst
   dest-dir: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/processed/
 options:
-  delete-files: true
+  delete-files: false

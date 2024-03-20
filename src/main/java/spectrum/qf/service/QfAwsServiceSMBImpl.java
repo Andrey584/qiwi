@@ -31,7 +31,7 @@ public class QfAwsServiceSMBImpl implements QFAwsService {
         SmbFile smbFile = file.getSmbFile();
         try (InputStream inputStream = smbFile.getInputStream()) {
             amazonS3.putObject(new PutObjectRequest(awsBucketName, smbFile.getName(), inputStream, null));
-            logger.info("Файл с именем " + smbFile.getName() + " весом " + smbFile.length() + " байт успешно перемещен в S3 хранилище.");
+            logger.info("Файл с именем {} весом {} байт был успешно перемещен в S3 хранилище.", smbFile.getName(), smbFile.length());
         } catch (IOException e) {
             logger.error("Файл с именем " + smbFile.getName() + " не удалось переместить в S3 хранилище.");
         }

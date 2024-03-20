@@ -77,21 +77,21 @@ public class QFServiceSMBImpl implements QFFileService {
         if (deleteFiles) {
             try {
                 fileFrom.delete();
-                logger.info("Файл с именем " + fileName + " весом " + fileFrom.length() + " был успешно удален после копирования в S3 хранилище.");
+                logger.info("Файл с именем {} весом {} был успешно удален после копирования в S3 хранилище.", fileName, fileFrom.length());
             } catch (SmbException e) {
-                logger.error("Файл с именем " + fileName + " весом " + " не получилось удалить после перемещения в S3 хранилище.");
+                logger.error("Файл с именем {} не получилось удалить после перемещения в S3 хранилище.", fileName);
             }
         } else {
             try {
                 fileFrom.renameTo(fileTo2);
-                logger.info("Файл с именем " + fileName + " успешно перемещен в папку processed после копирования в S3 хранилище.");
+                logger.info("Файл с именем {} успешно перемещен в папку processed после копирования в S3 хранилище.", fileName);
             } catch (SmbException e) {
-                logger.info("Файл с именем " + fileFrom.getName() + " уже существует в папке processed. Новый файл заменит уже существующий.");
+                logger.info("Файл с именем {} уже существует в папке processed. Новый файл заменит уже существующий.", fileName);
                 try {
                     fileFrom.delete();
-                    logger.info("Файл с именем " + fileFrom.getName() + " был успешно перезаписан в папку processed после копирования в S3 хранилище.");
+                    logger.info("Файл с именем {} был успешно перезаписан в папку processed после копирования в S3 хранилище.", fileName);
                 } catch (SmbException ex) {
-                    logger.error("Файл с именем " + fileFrom.getName() + " не удалось удалить из папки processed. Новый файл не заменит уже существующий.");
+                    logger.error("Файл с именем {} не удалось удалить из папки processed. Новый файл не заменит уже существующий.", fileName);
                 }
             }
         }
@@ -131,7 +131,7 @@ public class QFServiceSMBImpl implements QFFileService {
             Phonenumber.PhoneNumber number = phoneNumberUtil.parse(fileName, null);
             return phoneNumberUtil.isValidNumber(number);
         } catch (NumberParseException e) {
-            logger.error("Не удалось проверить номер телефона файла с именем " + name + " на валидность.");
+            logger.error("Не удалось проверить номер телефона файла с именем {} на валидность.", name);
             return false;
         }
     }

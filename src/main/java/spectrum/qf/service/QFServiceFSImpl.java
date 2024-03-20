@@ -85,7 +85,7 @@ public class QFServiceFSImpl implements QFFileService {
             Phonenumber.PhoneNumber number = phoneNumberUtil.parse(fileName, null);
             return phoneNumberUtil.isValidNumber(number);
         } catch (NumberParseException e) {
-            logger.error("Не удалось проверить номер телефона файла с именем " + name + " на валидность.");
+            logger.error("Не удалось проверить номер телефона файла с именем + {} на валидность.", name);
             return false;
         }
     }
@@ -106,17 +106,17 @@ public class QFServiceFSImpl implements QFFileService {
         if (deleteFiles) {
             boolean isDeleted = fileFrom.delete();
             if (!isDeleted)
-                logger.error("Ошибка во время удаления файла с именем " + fileFrom.getName());
-            logger.info("Файл с именем " + fileName + " весом " + fileWights + " байт был успешно удален после перемещения в S3 хранилище.");
+                logger.error("Ошибка во время удаления файла с именем {}.", fileFrom.getName());
+            logger.info("Файл с именем {} весом {} байт был успешно удален после перемещения в S3 хранилище.", fileName, fileWights);
         } else {
             try {
                 FileUtils.moveFile(fileFrom, fileDest);
-                logger.info("Файл с именем " + fileName + " весом " + fileWights + " байт успешно перемещен в папку processed после копирования в S3 хранилище.");
+                logger.info("Файл с именем {} весом {} байт успешно перемещен в папку processed после копирования в S3 хранилище.",fileName, fileWights );
             } catch (IOException e) {
-                logger.info("Файл с именем " + fileName + " уже существует в папке processed. Новый файл заменит уже существующий.");
+                logger.info("Файл с именем {} уже существует в папке processed. Новый файл заменит уже существующий.", fileName);
                 boolean isDeleted = fileDest.delete();
                 if (!isDeleted) {
-                    logger.error("Ошибка во время удаления файла с именем " + fileName + ". Новый файл не заменит уже существующий.");
+                    logger.error("Ошибка во время удаления файла с именем {}. Новый файл не заменит уже существующий.", fileName);
                 }
             }
         }
