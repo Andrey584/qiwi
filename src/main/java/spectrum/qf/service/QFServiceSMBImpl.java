@@ -28,8 +28,8 @@ public class QFServiceSMBImpl implements QFFileService {
     private static final Logger logger = LoggerFactory.getLogger(QFServiceSMBImpl.class);
     private static final int MIN_LENGTH_PHONE_NUMBER = 8;
     private static final int MAX_LENGTH_PHONE_NUMBER = 15;
-    private static final int MAX_COUNT_IN_ONE_DIRECTORY = 2;
-    private static final long MILLISECONDS_IN_ONE_MINUTE = 6;
+    private static final int MAX_COUNT_IN_ONE_DIRECTORY = 40000;
+    private static final long MILLISECONDS_IN_ONE_MINUTE = 60000;
 
     @Value(value = "${smb.from-dir}")
     private String smbPathFrom;
