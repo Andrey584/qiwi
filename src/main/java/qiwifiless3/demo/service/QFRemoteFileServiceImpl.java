@@ -74,7 +74,8 @@ public class QFRemoteFileServiceImpl implements QFFileService {
 
         SmbFile fileTo2 = null;
         try {
-            fileTo2 = new SmbFile(getPathTo(dateDestinationDir) + "/" + fileName);
+            NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(smbDomain, smbUsername, smbPassword);
+            fileTo2 = new SmbFile(getPathTo(dateDestinationDir) + "/" + fileName, auth);
         } catch (MalformedURLException | SmbException e) {
             logger.error("Ошибка при попытке указать путь файлу.");
         }

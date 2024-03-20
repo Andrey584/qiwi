@@ -15,9 +15,9 @@ smb:
     minVersion: 2
     maxVersion: 3
   enabled: true
-  from-dir: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/smb
-  domain: it-spectrum.ru
-  username: it-spectrum/jenkins
+  from-dir: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/smb/
+  domain: it-spectrum
+  username: jenkins
   password: jenkins
   service-name: smb-tst
   dest-dir: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/processed/
