@@ -2,17 +2,18 @@ package qiwifiless3.demo.bean;
 
 import jcifs.smb.SmbFile;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.File;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class QFFile {
     private File file;
     private SmbFile smbFile;
+
+    private QFFile() {
+    }
 
     public QFFile(File file) {
         this.file = file;

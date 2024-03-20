@@ -3,6 +3,7 @@ package qiwifiless3.demo.service;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @ConditionalOnProperty(value = "smb.enabled", havingValue = "true")
+@RequiredArgsConstructor
 public class QFRemoteFileServiceImpl implements QFFileService {
     private static final Logger logger = LoggerFactory.getLogger(QFRemoteFileServiceImpl.class);
     private static final int MIN_LENGTH_PHONE_NUMBER = 8;
@@ -34,8 +36,8 @@ public class QFRemoteFileServiceImpl implements QFFileService {
     private String smbUsername;
     @Value(value = "${smb.password}")
     private String smbPassword;
-    @Value(value = "${smb.url}")
-    private String smbUrl;
+    @Value(value = "${smb.from-dir}")
+    private String smbPathFrom;
     @Value(value = "${smb.dest-dir}")
     private String smbPathTo;
     @Value(value = "${options.delete-files}")
@@ -45,7 +47,7 @@ public class QFRemoteFileServiceImpl implements QFFileService {
     public QFFile getFile() {
         try {
             NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(smbDomain, smbUsername, smbPassword);
-            SmbFile smbFile = new SmbFile(smbUrl, auth);
+            SmbFile smbFile = new SmbFile(smbPathFrom, auth);
             return QFFile.of(getAnyFile(smbFile));
         } catch (IOException e) {
             logger.error("Ошибка при чтении файла.");
@@ -62,12 +64,14 @@ public class QFRemoteFileServiceImpl implements QFFileService {
         String fileName = fileFrom.getName();
 
         smbPathTo = smbPathTo.endsWith("/") ? smbPathTo : smbPathTo + "/";
+
         SmbFile dateDestinationDir = null;
         try {
             dateDestinationDir = new SmbFile(smbPathTo + dateFolderName);
         } catch (MalformedURLException ignored) {
             logger.error("Ошибка при попытке указать путь файлу");
         }
+
         SmbFile fileTo2 = null;
         try {
             fileTo2 = new SmbFile(getPathTo(dateDestinationDir) + "/" + fileName);

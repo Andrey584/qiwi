@@ -1,24 +1,18 @@
 package qiwifiless3.demo;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import qiwifiless3.demo.service.QfFileTransferService;
 
 @SpringBootApplication
+@RequiredArgsConstructor
 public class QFApplication implements CommandLineRunner {
+
     private final QfFileTransferService qfFileTransferService;
 
-    @Autowired
-    public QFApplication(QfFileTransferService qfFileTransferService) {
-        this.qfFileTransferService = qfFileTransferService;
-    }
-
     public static void main(String[] args) {
-        System.setProperty("jcifs.smb.client.minVersion", "SMB2");
-        System.setProperty("jcifs.smb.client.maxVersion", "SMB2");
         SpringApplication.run(QFApplication.class, args);
     }
 
