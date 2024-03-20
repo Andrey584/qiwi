@@ -1,11 +1,11 @@
-package qiwifiless3.demo.service;
+package spectrum.qf.service;
 
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import qiwifiless3.demo.bean.QFFile;
+import spectrum.qf.bean.QFFile;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +38,7 @@ public class QfFileTransferService {
 
     private void sleep() {
         try {
-            Thread.sleep(30000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

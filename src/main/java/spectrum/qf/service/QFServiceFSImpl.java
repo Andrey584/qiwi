@@ -1,4 +1,4 @@
-package qiwifiless3.demo.service;
+package spectrum.qf.service;
 
 
 import org.apache.commons.io.FileUtils;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
-import qiwifiless3.demo.bean.QFFile;
+import spectrum.qf.bean.QFFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 
 @Service
 @ConditionalOnProperty(value = "smb.enabled", havingValue = "false")
-public class QFLocalFileServiceImpl implements QFFileService {
-    private static final Logger logger = LoggerFactory.getLogger(QFLocalFileServiceImpl.class);
+public class QFServiceFSImpl implements QFFileService {
+    private static final Logger logger = LoggerFactory.getLogger(QFServiceFSImpl.class);
     private static final int MIN_LENGTH_PHONE_NUMBER = 8;
     private static final int MAX_LENGTH_PHONE_NUMBER = 15;
     private static final int MAX_COUNT_IN_ONE_DIRECTORY = 40000;
@@ -36,7 +36,7 @@ public class QFLocalFileServiceImpl implements QFFileService {
     @Value(value = "${options.delete-files}")
     private boolean deleteFiles;
 
-    public QFLocalFileServiceImpl() {
+    public QFServiceFSImpl() {
     }
 
     @Override

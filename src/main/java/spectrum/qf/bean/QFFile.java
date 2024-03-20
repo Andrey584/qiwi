@@ -1,4 +1,4 @@
-package qiwifiless3.demo.bean;
+package spectrum.qf.bean;
 
 import jcifs.smb.SmbFile;
 import lombok.Getter;

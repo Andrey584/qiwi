@@ -1,15 +1,14 @@
-package qiwifiless3.demo.service;
+package spectrum.qf.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import qiwifiless3.demo.bean.QFFile;
+import spectrum.qf.bean.QFFile;
 
 import java.io.File;
 
