@@ -1,6 +1,9 @@
 package spectrum.qf.service;
 
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +27,8 @@ import java.util.stream.Collectors;
 @ConditionalOnProperty(value = "smb.enabled", havingValue = "false")
 public class QFServiceFSImpl implements QFFileService {
     private static final Logger logger = LoggerFactory.getLogger(QFServiceFSImpl.class);
-    private static final int MIN_LENGTH_PHONE_NUMBER = 8;
-    private static final int MAX_LENGTH_PHONE_NUMBER = 15;
-    private static final int MAX_COUNT_IN_ONE_DIRECTORY = 40000;
-    private static final long MILLISECONDS_IN_ONE_MINUTE = 60000;
+    private static final int MAX_COUNT_FILES_IN_ONE_DIRECTORY = 40000;
+    private static final long MILLISECONDS_IN_ONE_MINUTE = 60;
 
     @Value(value = "${file.root-dir}")
     private String pathFrom;
@@ -53,13 +54,14 @@ public class QFServiceFSImpl implements QFFileService {
     private File getAnyFile(File directory) {
         List<File> childFiles = List.of(Objects.requireNonNull(directory.listFiles()));
         for (File childFile : childFiles) {
-            String fileName = childFile.getName();
             if (childFile.isFile()
                     && childFile.length() != 0
-                    && fileName.length() >= MIN_LENGTH_PHONE_NUMBER
-                    && fileName.length() <= MAX_LENGTH_PHONE_NUMBER
                     && System.currentTimeMillis() - childFile.lastModified() > MILLISECONDS_IN_ONE_MINUTE) {
-                return childFile;
+                String fileName = childFile.getName();
+                boolean isValidNumberPhone = isValidNumberPhone(fileName);
+                if (isValidNumberPhone) {
+                    return childFile;
+                }
             }
         }
         for (File childFile : childFiles) {
@@ -68,6 +70,24 @@ public class QFServiceFSImpl implements QFFileService {
             }
         }
         return null;
+    }
+
+    private boolean isValidNumberPhone(String name) {
+        PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+        int index = name.indexOf(".");
+        String fileName = name;
+        if (index != -1) {
+            fileName = name.substring(0, name.indexOf("."));
+        } else {
+            return false;
+        }
+        try {
+            Phonenumber.PhoneNumber number = phoneNumberUtil.parse(fileName, null);
+            return phoneNumberUtil.isValidNumber(number);
+        } catch (NumberParseException e) {
+            logger.error("Не удалось проверить номер телефона файла с именем " + name + " на валидность.");
+            return false;
+        }
     }
 
     @Override
@@ -84,19 +104,20 @@ public class QFServiceFSImpl implements QFFileService {
         File fileDest = new File(getPathTo(dateDestinationDir) + "/" + fileName);
 
         if (deleteFiles) {
-            try {
-                FileUtils.delete(fileFrom);
-                logger.info("Файл с именем " + fileName + " весом " + fileWights + " байт был успешно удален после перемещения в S3 хранилище.");
-            } catch (IOException e) {
-                logger.error("Ошибка при удалении файла с именем " + fileName + ". Файл не был удален.");
-            }
+            boolean isDeleted = fileFrom.delete();
+            if (!isDeleted)
+                logger.error("Ошибка во время удаления файла с именем " + fileFrom.getName());
+            logger.info("Файл с именем " + fileName + " весом " + fileWights + " байт был успешно удален после перемещения в S3 хранилище.");
         } else {
             try {
                 FileUtils.moveFile(fileFrom, fileDest);
-                logger.info("Файл с именем " + fileName + " весом " + fileWights + " байт успешно перемещен в папку processed.");
+                logger.info("Файл с именем " + fileName + " весом " + fileWights + " байт успешно перемещен в папку processed после копирования в S3 хранилище.");
             } catch (IOException e) {
-                fileDest.delete();
                 logger.info("Файл с именем " + fileName + " уже существует в папке processed. Новый файл заменит уже существующий.");
+                boolean isDeleted = fileDest.delete();
+                if (!isDeleted) {
+                    logger.error("Ошибка во время удаления файла с именем " + fileName + ". Новый файл не заменит уже существующий.");
+                }
             }
         }
     }
@@ -141,7 +162,7 @@ public class QFServiceFSImpl implements QFFileService {
         if (files == null) {
             return dir;
         }
-        if (files.length < MAX_COUNT_IN_ONE_DIRECTORY) {
+        if (files.length < MAX_COUNT_FILES_IN_ONE_DIRECTORY) {
             return dir;
         }
         int dirNumberName = Integer.parseInt(dir.getName()) + 1;

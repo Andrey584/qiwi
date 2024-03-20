@@ -28,7 +28,7 @@ public class QFAwsServiceFSImpl implements QFAwsService {
         File file = qfFile.getFile();
         long fileWight = file.length();
         amazonS3.putObject(new PutObjectRequest(awsBucketName, file.getName(), file));
-        logger.info("Файл " + file.getName() + " весом " + fileWight + " байт успешно загружен в S3 хранилище.");
+        logger.info("Файл с именем " + file.getName() + " весом " + fileWight + " байт успешно загружен в S3 хранилище.");
     }
 
 }

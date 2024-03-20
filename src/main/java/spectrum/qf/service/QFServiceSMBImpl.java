@@ -1,5 +1,8 @@
 package spectrum.qf.service;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
@@ -26,10 +29,8 @@ public class QFServiceSMBImpl implements QFFileService {
 
     private final NtlmPasswordAuthentication auth;
     private static final Logger logger = LoggerFactory.getLogger(QFServiceSMBImpl.class);
-    private static final int MIN_LENGTH_PHONE_NUMBER = 8;
-    private static final int MAX_LENGTH_PHONE_NUMBER = 15;
-    private static final int MAX_COUNT_IN_ONE_DIRECTORY = 40000;
-    private static final long MILLISECONDS_IN_ONE_MINUTE = 60000;
+    private static final int MAX_COUNT_IN_ONE_DIRECTORY = 1;
+    private static final long MILLISECONDS_IN_ONE_MINUTE = 6;
 
     @Value(value = "${smb.from-dir}")
     private String smbPathFrom;
@@ -83,9 +84,9 @@ public class QFServiceSMBImpl implements QFFileService {
         } else {
             try {
                 fileFrom.renameTo(fileTo2);
-                logger.info("Файл с именем " + fileName + " весом " + " байт успешно перемещен в папку processed после копирования в S3 хранилище.");
+                logger.info("Файл с именем " + fileName + " успешно перемещен в папку processed после копирования в S3 хранилище.");
             } catch (SmbException e) {
-                logger.error("Файл с именем " + fileFrom.getName() + " уже существует в папке processed. Новый файл заменит уже существующий.");
+                logger.info("Файл с именем " + fileFrom.getName() + " уже существует в папке processed. Новый файл заменит уже существующий.");
                 try {
                     fileFrom.delete();
                     logger.info("Файл с именем " + fileFrom.getName() + " был успешно перезаписан в папку processed после копирования в S3 хранилище.");
@@ -99,13 +100,14 @@ public class QFServiceSMBImpl implements QFFileService {
     private SmbFile getAnyFile(SmbFile dir) throws SmbException {
         List<SmbFile> smbFiles = List.of(Objects.requireNonNull(dir.listFiles()));
         for (SmbFile childFile : smbFiles) {
-            String fileName = childFile.getName();
             if (childFile.isFile()
                     && childFile.length() != 0
-                    && fileName.length() >= MIN_LENGTH_PHONE_NUMBER
-                    && fileName.length() <= MAX_LENGTH_PHONE_NUMBER
                     && System.currentTimeMillis() - childFile.lastModified() > MILLISECONDS_IN_ONE_MINUTE) {
-                return childFile;
+                String fileName = childFile.getName();
+                boolean isValidPhoneNumber = isValidNumberPhone(fileName);
+                if (isValidPhoneNumber) {
+                    return childFile;
+                }
             }
         }
         for (SmbFile childFile : smbFiles) {
@@ -114,6 +116,24 @@ public class QFServiceSMBImpl implements QFFileService {
             }
         }
         return null;
+    }
+
+    private boolean isValidNumberPhone(String name) {
+        PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+        int index = name.indexOf(".");
+        String fileName = name;
+        if (index != -1) {
+            fileName = name.substring(0, name.indexOf("."));
+        } else {
+            return false;
+        }
+        try {
+            Phonenumber.PhoneNumber number = phoneNumberUtil.parse(fileName, null);
+            return phoneNumberUtil.isValidNumber(number);
+        } catch (NumberParseException e) {
+            logger.error("Не удалось проверить номер телефона файла с именем " + name + " на валидность.");
+            return false;
+        }
     }
 
     private SmbFile getPathTo(SmbFile dir) throws SmbException, MalformedURLException {
