@@ -2,6 +2,7 @@ package spectrum.qf.config;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
+import com.amazonaws.SDKGlobalConfiguration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -31,10 +32,15 @@ public class AwsConfig {
         ClientConfiguration clientConfig = new ClientConfiguration();
         clientConfig.setProtocol(Protocol.HTTP);
 
+        System.setProperty(SDKGlobalConfiguration.DISABLE_CERT_CHECKING_SYSTEM_PROPERTY, "true");
+        System.setProperty("com.amazonaws.sdk.disableCertChecking", "true");
+        System.setProperty("s3utils.disableSocket", "true");
+
         return AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, awsRegion))
+                .withClientConfiguration(new ClientConfiguration().withSocketBufferSizeHints(0, 1024 * 1024))
                 .build();
     }
 }

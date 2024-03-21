@@ -1,6 +1,7 @@
 package spectrum.qf.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -27,8 +28,11 @@ public class QFAwsServiceFSImpl implements QFAwsService {
     public void upload(QFFile qfFile) {
         File file = qfFile.getFile();
         long fileWight = file.length();
+        PutObjectRequest putObjectRequest = new PutObjectRequest(awsBucketName, file.getName(), file);
+        putObjectRequest.getRequestClientOptions().setReadLimit(1024 * 1024);
         amazonS3.putObject(new PutObjectRequest(awsBucketName, file.getName(), file));
         logger.info("Файл с именем {} весом {} байт успешно загружен в S3 хранилище.", file.getName(), fileWight);
+
     }
 
 }
