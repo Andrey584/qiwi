@@ -6,24 +6,20 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                dir("${WORKSPACE}") {
-                    sh "chmod +x mvnw"
-                    sh 'mvnw clean package'
+                script {
+                    sh "chmod +x gradlew"
+                    sh './mvnw clean package'
                 }
             }
         }
         stage('Test') {
             steps {
-                dir("${WORKSPACE}") {
-                    sh 'mvnw test'
-                }
+                sh './mvnw test'
             }
         }
         stage('Deploy') {
             steps {
-                dir("${WORKSPACE}") {
-                    sh 'mvnw deploy'
-                }
+                sh './mvnw deploy'
             }
         }
     }
