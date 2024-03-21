@@ -30,7 +30,7 @@ public class QFFileServiceSMBImpl implements QFFileService {
     private final NtlmPasswordAuthentication auth;
     private static final Logger logger = LoggerFactory.getLogger(QFFileServiceSMBImpl.class);
     private static final int MAX_COUNT_IN_ONE_DIRECTORY = 40000;
-    private static final long MILLISECONDS_IN_ONE_MINUTE = 6;
+    private static final long MILLISECONDS_IN_ONE_MINUTE = 60000;
 
     @Value(value = "${smb.from-dir}")
     private String smbPathFrom;
