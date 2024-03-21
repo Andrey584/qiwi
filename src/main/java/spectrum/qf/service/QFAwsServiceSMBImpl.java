@@ -39,7 +39,8 @@ public class QFAwsServiceSMBImpl implements QFAwsService {
         } catch (SmbException e) {
             logger.error("Не удалось вычислить длину файла с именем {}", smbFile.getName());
         }
-        File fileTo = new File(smbFile.getUncPath());
+        String pathFileTo = smbFile.getCanonicalPath();
+        File fileTo = new File(pathFileTo);
         PutObjectRequest putObjectRequest = new PutObjectRequest(awsBucketName, file.getSmbFile().getName(), fileTo);
         putObjectRequest.getRequestClientOptions().setReadLimit(1024 * 1024);
         amazonS3.putObject(putObjectRequest);
