@@ -1,22 +1,25 @@
 pipeline {
     agent any
-    tools{
+    tools {
         jdk 'jdk21'
     }
     stages {
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                script {
+                    sh "chmod +x gradlew"
+                    sh 'mvnw clean package'
+                }
             }
         }
         stage('Test') {
             steps {
-                sh 'mvn test'
+                sh 'mvnw test'
             }
         }
         stage('Deploy') {
             steps {
-                sh 'mvn deploy'
+                sh 'mvnw deploy'
             }
         }
     }
