@@ -12,16 +12,14 @@ public class QFFile {
     private File file;
     private SmbFile smbFile;
 
-    private QFFile() {
-    }
-
-    public QFFile(File file) {
+    private QFFile(File file) {
         this.file = file;
     }
 
-    public QFFile(SmbFile smbFile) {
+    private QFFile(SmbFile smbFile) {
         this.smbFile = smbFile;
     }
+
 
     public static QFFile of(File file) {
         return new QFFile(file);

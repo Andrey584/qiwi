@@ -4,6 +4,10 @@ package spectrum.qf.service;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +29,12 @@ import java.util.stream.Collectors;
 
 @Service
 @ConditionalOnProperty(value = "smb.enabled", havingValue = "false")
-public class QFServiceFSImpl implements QFFileService {
-    private static final Logger logger = LoggerFactory.getLogger(QFServiceFSImpl.class);
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+public class QFFileServiceFSImpl implements QFFileService {
+    private static final Logger logger = LoggerFactory.getLogger(QFFileServiceFSImpl.class);
     private static final int MAX_COUNT_FILES_IN_ONE_DIRECTORY = 40000;
     private static final long MILLISECONDS_IN_ONE_MINUTE = 60;
 
@@ -36,9 +44,6 @@ public class QFServiceFSImpl implements QFFileService {
     private String pathTo;
     @Value(value = "${options.delete-files}")
     private boolean deleteFiles;
-
-    public QFServiceFSImpl() {
-    }
 
     @Override
     public QFFile getFile() {
@@ -75,7 +80,7 @@ public class QFServiceFSImpl implements QFFileService {
     private boolean isValidNumberPhone(String name) {
         PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
         int index = name.indexOf(".");
-        String fileName = name;
+        String fileName;
         if (index != -1) {
             fileName = name.substring(0, name.indexOf("."));
         } else {
@@ -94,7 +99,6 @@ public class QFServiceFSImpl implements QFFileService {
     public void move(QFFile qfFile) {
         File fileFrom = qfFile.getFile();
         String fileName = fileFrom.getName();
-        long fileWights = fileFrom.length();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd/");
         String dateFolderName = dateFormat.format(new Date());
 
@@ -106,12 +110,12 @@ public class QFServiceFSImpl implements QFFileService {
         if (deleteFiles) {
             boolean isDeleted = fileFrom.delete();
             if (!isDeleted)
-                logger.error("Ошибка во время удаления файла с именем {}.", fileFrom.getName());
-            logger.info("Файл с именем {} весом {} байт был успешно удален после перемещения в S3 хранилище.", fileName, fileWights);
+                logger.error("Ошибка во время удаления файла с именем {}.", fileName);
+            logger.info("Файл с именем {} был успешно удален после перемещения в S3 хранилище.", fileName);
         } else {
             try {
                 FileUtils.moveFile(fileFrom, fileDest);
-                logger.info("Файл с именем {} весом {} байт успешно перемещен в папку processed после копирования в S3 хранилище.",fileName, fileWights );
+                logger.info("Файл с именем {} успешно перемещен в папку processed после копирования в S3 хранилище.", fileName);
             } catch (IOException e) {
                 logger.info("Файл с именем {} уже существует в папке processed. Новый файл заменит уже существующий.", fileName);
                 boolean isDeleted = fileDest.delete();

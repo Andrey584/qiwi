@@ -9,9 +9,10 @@ import spectrum.qf.bean.QFFile;
 
 @Service
 @RequiredArgsConstructor
-public class QfFileTransferService {
+public class QFFileTransferService {
 
-    private static final Logger logger = LoggerFactory.getLogger(QfFileTransferService.class);
+    private static final long MILLISECONDS_IN_ONE_MINUTE = 3000;
+    private static final Logger logger = LoggerFactory.getLogger(QFFileTransferService.class);
     private volatile boolean isContinue = true;
 
     private final QFFileService qfFileService;
@@ -20,17 +21,12 @@ public class QfFileTransferService {
     public void uploadFiles() {
         while (isContinue) {
             QFFile file = qfFileService.getFile();
-            if (file == null) {
+            if (file == null || (file.getFile() == null && file.getSmbFile() == null)) {
                 logger.info("Нет подходящих файлов.");
                 sleep();
             } else {
-                if (file.getFile() != null || file.getSmbFile() != null) {
-                    qfAwsService.upload(file);
-                    qfFileService.move(file);
-                } else {
-                    logger.info("Нет подходящих файлов.");
-                    sleep();
-                }
+                qfAwsService.upload(file);
+                qfFileService.move(file);
             }
         }
         logger.info("Программа завершила свою работу.");
@@ -38,7 +34,7 @@ public class QfFileTransferService {
 
     private void sleep() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(MILLISECONDS_IN_ONE_MINUTE);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import spectrum.qf.service.QfFileTransferService;
+import spectrum.qf.service.QFFileTransferService;
 
 @SpringBootApplication
 @RequiredArgsConstructor
 public class QFApplication implements CommandLineRunner {
 
-    private final QfFileTransferService qfFileTransferService;
+    private final QFFileTransferService qfFileTransferService;
 
     public static void main(String[] args) {
         SpringApplication.run(QFApplication.class, args);

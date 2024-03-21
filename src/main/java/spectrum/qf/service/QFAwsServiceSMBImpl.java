@@ -17,9 +17,9 @@ import java.io.InputStream;
 @ConditionalOnProperty(value = "smb.enabled", havingValue = "true")
 @RequiredArgsConstructor
 @Service
-public class QfAwsServiceSMBImpl implements QFAwsService {
+public class QFAwsServiceSMBImpl implements QFAwsService {
 
-    private static final Logger logger = LoggerFactory.getLogger(QFServiceFSImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(QFFileServiceFSImpl.class);
 
     @Value(value = "${s3.bucket}")
     private String awsBucketName;

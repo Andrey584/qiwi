@@ -25,11 +25,11 @@ import java.util.Objects;
 @Service
 @ConditionalOnProperty(value = "smb.enabled", havingValue = "true")
 @RequiredArgsConstructor
-public class QFServiceSMBImpl implements QFFileService {
+public class QFFileServiceSMBImpl implements QFFileService {
 
     private final NtlmPasswordAuthentication auth;
-    private static final Logger logger = LoggerFactory.getLogger(QFServiceSMBImpl.class);
-    private static final int MAX_COUNT_IN_ONE_DIRECTORY = 1;
+    private static final Logger logger = LoggerFactory.getLogger(QFFileServiceSMBImpl.class);
+    private static final int MAX_COUNT_IN_ONE_DIRECTORY = 40000;
     private static final long MILLISECONDS_IN_ONE_MINUTE = 6;
 
     @Value(value = "${smb.from-dir}")
@@ -67,9 +67,9 @@ public class QFServiceSMBImpl implements QFFileService {
             logger.error("Возникла ошибка во время попытки перемещения файла.");
         }
 
-        SmbFile fileTo2 = null;
+        SmbFile smbFile = null;
         try {
-            fileTo2 = new SmbFile(getPathTo(dateDestinationDir) + "/" + fileName, auth);
+            smbFile = new SmbFile(getPathTo(dateDestinationDir) + "/" + fileName, auth);
         } catch (MalformedURLException | SmbException e) {
             logger.error("Возникла ошибка во время попытки перемещения файла.");
         }
@@ -77,13 +77,13 @@ public class QFServiceSMBImpl implements QFFileService {
         if (deleteFiles) {
             try {
                 fileFrom.delete();
-                logger.info("Файл с именем {} весом {} был успешно удален после копирования в S3 хранилище.", fileName, fileFrom.length());
+                logger.info("Файл с именем {} был успешно удален после копирования в S3 хранилище.", fileName);
             } catch (SmbException e) {
                 logger.error("Файл с именем {} не получилось удалить после перемещения в S3 хранилище.", fileName);
             }
         } else {
             try {
-                fileFrom.renameTo(fileTo2);
+                fileFrom.renameTo(smbFile);
                 logger.info("Файл с именем {} успешно перемещен в папку processed после копирования в S3 хранилище.", fileName);
             } catch (SmbException e) {
                 logger.info("Файл с именем {} уже существует в папке processed. Новый файл заменит уже существующий.", fileName);
