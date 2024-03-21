@@ -7,7 +7,7 @@
 
 ### Настройки запуска:
     file: (указывается в случае чтения файлов с локального хранилища)
-        root-dir: C:/...
+        root-dir: C:/.../
         dest-dir: C:/.../processed/
 
     s3: (настройки S3 хранилища)
@@ -20,7 +20,8 @@
     smb: (указывается в случае чтения файлов по протоколу SMB)
         enabled: указывается true в случае, если чтение происходит по протоколу SMB и false в случае чтения с локального хранилища
         protocol:
-            version: версия SMB-протокола (min = 1, max = 3) from-dir: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/smb/
+            version: версия SMB-протокола (одной цифрой)
+        from-dir: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/smb/
         domain: домен
         username: имя пользователя
         password: пароль
