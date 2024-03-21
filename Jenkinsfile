@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                script {
+                dir("${WORKSPACE}") {
                     sh "chmod +x mvnw"
                     sh 'mvnw clean package'
                 }
@@ -14,12 +14,16 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'mvnw test'
+                dir("${WORKSPACE}") {
+                    sh 'mvnw test'
+                }
             }
         }
         stage('Deploy') {
             steps {
-                sh 'mvnw deploy'
+                dir("${WORKSPACE}") {
+                    sh 'mvnw deploy'
+                }
             }
         }
     }
