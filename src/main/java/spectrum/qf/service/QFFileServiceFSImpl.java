@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public class QFFileServiceFSImpl implements QFFileService {
     private static final Logger logger = LoggerFactory.getLogger(QFFileServiceFSImpl.class);
     private static final int MAX_COUNT_FILES_IN_ONE_DIRECTORY = 40000;
-    private static final long MILLISECONDS_IN_ONE_MINUTE = 60;
+    private static final long MILLISECONDS_IN_ONE_MINUTE = 60000;
 
     @Value(value = "${file.root-dir}")
     private String pathFrom;
