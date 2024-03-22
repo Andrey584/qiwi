@@ -109,14 +109,14 @@ public class QFFileServiceSMBImpl extends QFFileServiceGlobal implements QFFileS
     }
 
     private SmbFile createFirstFolder(SmbFile dir) throws MalformedURLException, SmbException {
-        SmbFile newDir = new SmbFile(dir.getPath() + "1", auth);
-        newDir.mkdirs();
+        SmbFile newDir = new SmbFile(dir.getPath() + "1/", auth);
+        newDir.mkdir();
         return newDir;
     }
 
     private SmbFile checkForExistence(SmbFile dir) throws SmbException, MalformedURLException {
         if (!dir.exists()) {
-            dir.mkdirs();
+            dir.mkdir();
             return createFirstFolder(dir);
         }
         return dir;
