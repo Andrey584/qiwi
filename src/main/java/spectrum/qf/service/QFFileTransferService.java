@@ -36,7 +36,7 @@ public class QFFileTransferService {
         try {
             Thread.sleep(SLEEP_IN_MILLISECONDS);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 

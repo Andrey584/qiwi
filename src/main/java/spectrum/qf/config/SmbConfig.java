@@ -8,7 +8,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Setter
@@ -28,13 +27,12 @@ public class SmbConfig {
 
     private String version;
 
-    private final static Map<String, String> mapProtocol = new HashMap<>() {
-        {
-            put("1", "SMB1");
-            put("2", "SMB2");
-            put("3", "SMB3");
-        }
-    };
+    private final static Map<String, String> mapProtocol =
+            Map.of(
+                    "1", "SMB1",
+                    "2", "SMB2",
+                    "3", "SMB3"
+            );
 
     @Bean
     public NtlmPasswordAuthentication auth() {
