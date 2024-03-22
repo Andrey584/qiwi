@@ -98,7 +98,9 @@ public class QFFileServiceFSImpl extends QFFileServiceGlobal implements QFFileSe
     }
 
     private File createFirstFolder(File dir) {
-        return new File(dir.getPath() + "/1");
+        File newDir = new File(dir.getPath() + "/1/");
+        newDir.mkdirs();
+        return newDir;
     }
 
     private File getActualFolderInDir(File dir) {
