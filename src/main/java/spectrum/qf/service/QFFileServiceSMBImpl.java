@@ -1,14 +1,9 @@
 package spectrum.qf.service;
 
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -25,19 +20,14 @@ import java.util.Objects;
 @Service
 @ConditionalOnProperty(value = "smb.enabled", havingValue = "true")
 @RequiredArgsConstructor
-public class QFFileServiceSMBImpl implements QFFileService {
+public class QFFileServiceSMBImpl extends QFFileServiceGlobal implements QFFileService {
 
     private final NtlmPasswordAuthentication auth;
-    private static final Logger logger = LoggerFactory.getLogger(QFFileServiceSMBImpl.class);
-    private static final int MAX_COUNT_IN_ONE_DIRECTORY = 40000;
-    private static final long MILLISECONDS_IN_ONE_MINUTE = 60000;
 
     @Value(value = "${smb.from-dir}")
     private String smbPathFrom;
     @Value(value = "${smb.dest-dir}")
     private String smbPathTo;
-    @Value(value = "${options.delete-files}")
-    private Boolean deleteFiles;
 
     @Override
     public QFFile getFile() {
@@ -118,24 +108,6 @@ public class QFFileServiceSMBImpl implements QFFileService {
         return null;
     }
 
-    private boolean isValidNumberPhone(String name) {
-        PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-        int index = name.indexOf(".");
-        String fileName = name;
-        if (index != -1) {
-            fileName = name.substring(0, name.indexOf("."));
-        } else {
-            return false;
-        }
-        try {
-            Phonenumber.PhoneNumber number = phoneNumberUtil.parse(fileName, null);
-            return phoneNumberUtil.isValidNumber(number);
-        } catch (NumberParseException e) {
-            logger.error("Не удалось проверить номер телефона файла с именем {} на валидность.", name);
-            return false;
-        }
-    }
-
     private SmbFile getPathTo(SmbFile dir) throws SmbException, MalformedURLException {
         SmbFile newDir = checkForExistence(dir);
         return getActualFolderInDir(newDir);
@@ -180,7 +152,7 @@ public class QFFileServiceSMBImpl implements QFFileService {
         if (files == null) {
             return dir;
         }
-        if (files.length < MAX_COUNT_IN_ONE_DIRECTORY) {
+        if (files.length < MAX_COUNT_FILES_IN_ONE_DIRECTORY) {
             return dir;
         }
         String countDir = dir.getName().substring(0, dir.getName().length() - 1);

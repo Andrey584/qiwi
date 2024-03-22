@@ -27,6 +27,7 @@ public class QFAwsServiceSMBImpl implements QFAwsService {
     @Override
     public void upload(QFFile file) {
         SmbFile smbFile = file.getSmbFile();
+        String smbFileName = file.getSmbFile().getName();
         long weight = 0;
         try {
             weight = smbFile.length();
@@ -34,10 +35,10 @@ public class QFAwsServiceSMBImpl implements QFAwsService {
             logger.error("Не удалось вычислить длину файла с именем {}", smbFile.getName());
         }
         String pathFileTo = smbFile.getCanonicalPath();
-        PutObjectRequest putObjectRequest = new PutObjectRequest(awsBucketName, file.getSmbFile().getName(), pathFileTo);
+        PutObjectRequest putObjectRequest = new PutObjectRequest(awsBucketName, smbFileName, pathFileTo);
         putObjectRequest.getRequestClientOptions().setReadLimit(1024 * 1024);
         amazonS3.putObject(putObjectRequest);
-        logger.info("Файл с именем {} весом {} байт был успешно перемещен в S3 хранилище.", smbFile.getName(), weight);
+        logger.info("Файл с именем {} весом {} байт был успешно перемещен в S3 хранилище.", smbFileName, weight);
     }
 }
 

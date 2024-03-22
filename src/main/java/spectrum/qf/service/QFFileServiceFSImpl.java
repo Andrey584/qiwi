@@ -1,16 +1,11 @@
 package spectrum.qf.service;
 
 
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -33,17 +28,12 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Setter
 @Getter
-public class QFFileServiceFSImpl implements QFFileService {
-    private static final Logger logger = LoggerFactory.getLogger(QFFileServiceFSImpl.class);
-    private static final int MAX_COUNT_FILES_IN_ONE_DIRECTORY = 40000;
-    private static final long MILLISECONDS_IN_ONE_MINUTE = 60000;
+public class QFFileServiceFSImpl extends QFFileServiceGlobal implements QFFileService {
 
     @Value(value = "${file.root-dir}")
     private String pathFrom;
     @Value(value = "${file.dest-dir}")
     private String pathTo;
-    @Value(value = "${options.delete-files}")
-    private boolean deleteFiles;
 
     @Override
     public QFFile getFile() {
@@ -75,24 +65,6 @@ public class QFFileServiceFSImpl implements QFFileService {
             }
         }
         return null;
-    }
-
-    private boolean isValidNumberPhone(String name) {
-        PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-        int index = name.indexOf(".");
-        String fileName;
-        if (index != -1) {
-            fileName = name.substring(0, name.indexOf("."));
-        } else {
-            return false;
-        }
-        try {
-            Phonenumber.PhoneNumber number = phoneNumberUtil.parse(fileName, null);
-            return phoneNumberUtil.isValidNumber(number);
-        } catch (NumberParseException e) {
-            logger.error("Не удалось проверить номер телефона файла с именем + {} на валидность.", name);
-            return false;
-        }
     }
 
     @Override
