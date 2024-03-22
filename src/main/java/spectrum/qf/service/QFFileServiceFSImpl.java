@@ -117,8 +117,11 @@ public class QFFileServiceFSImpl extends QFFileServiceGlobal implements QFFileSe
                 })
                 .collect(Collectors.toList())
                 .reversed();
-        File actualFolder = subFoldersList.getFirst();
-        return checkForMaxElementInDir(actualFolder);
+        if (!subFoldersList.isEmpty()) {
+            File actualFolder = subFoldersList.getFirst();
+            return checkForMaxElementInDir(actualFolder);
+        }
+        return checkForMaxElementInDir(dir);
     }
 
     private File checkForMaxElementInDir(File dir) {

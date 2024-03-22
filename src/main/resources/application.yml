@@ -1,24 +1,23 @@
-spring:
-  application:
-    name: spectrum-qf-aws-application
+application:
+  name: spectrum-qf-aws-application
 file:
-  root-dir: 
-  dest-dir: 
+  root-dir: C:/Users/ashay/Desktop/local
+  dest-dir: C:/Users/ashay/Desktop/processed/
 s3:
-  url: 
-  bucket: 
-  accessKey: 
-  secretKey: 
+  url: http://192.168.110.110:9000
+  bucket: kiwi
+  accessKey: XY9grHx9CfFL32YU8vX0
+  secretKey: YZ579SrTZfvGbGyGOFJgFgNWSaelB3RkkoISGCOT
   region: ap-southeast-1
 smb:
   protocol:
     version: 2
   enabled: false
-  from-dir: 
-  dest-dir: 
-  domain: 
-  username: 
-  password: 
-  service-name: 
+  from-dir: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/smb/
+  dest-dir: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/processed/
+  domain: it-spectrum
+  username: jenkins
+  password: jenkins
+  service-name: smb-tst
 options:
-  delete-files: false
+  delete-files: true

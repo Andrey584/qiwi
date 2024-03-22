@@ -122,15 +122,15 @@ public class QFFileServiceSMBImpl extends QFFileServiceGlobal implements QFFileS
             return dir;
         }
         List<SmbFile> subFolders = List.of(Objects.requireNonNull(files));
-        List<SmbFile> list = subFolders.stream()
+        List<SmbFile> subFoldersList = subFolders.stream()
                 .sorted((f1, f2) -> {
                     Integer f1Name = Integer.parseInt(f1.getName().substring(0, f1.getName().length() - 1));
                     Integer f2Name = Integer.parseInt(f2.getName().substring(0, f2.getName().length() - 1));
                     return f2Name.compareTo(f1Name);
                 })
                 .toList();
-        if (!list.isEmpty()) {
-            SmbFile actualFolder = list.getFirst();
+        if (!subFoldersList.isEmpty()) {
+            SmbFile actualFolder = subFoldersList.getFirst();
             return checkForMaxElementInDir(actualFolder);
         }
         return checkForMaxElementInDir(dir);
