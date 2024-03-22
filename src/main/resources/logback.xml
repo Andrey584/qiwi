@@ -7,7 +7,7 @@
     </appender>
 
     <appender name="INFO_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>info.log</file>
+        <file>src/main/resources/info.log</file>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level - %msg%n</pattern>
         </encoder>
@@ -19,7 +19,7 @@
     </appender>
 
     <appender name="ERROR_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>error.log</file>
+        <file>src/main/resources/error.log</file>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level - %msg%n</pattern>
         </encoder>

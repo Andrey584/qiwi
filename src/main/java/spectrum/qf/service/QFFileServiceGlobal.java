@@ -3,14 +3,11 @@ package spectrum.qf.service;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
-import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
-@Getter
-@Setter
+
 public abstract class QFFileServiceGlobal {
 
     @Value(value = "${options.delete-files}")
