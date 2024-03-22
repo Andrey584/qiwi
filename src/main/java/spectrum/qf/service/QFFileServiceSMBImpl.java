@@ -4,7 +4,6 @@ import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import spectrum.qf.bean.QFFile;
@@ -23,11 +22,6 @@ import java.util.Objects;
 public class QFFileServiceSMBImpl extends QFFileServiceGlobal implements QFFileService {
 
     private final NtlmPasswordAuthentication auth;
-
-    @Value(value = "${smb.from-dir}")
-    private String smbPathFrom;
-    @Value(value = "${smb.dest-dir}")
-    private String smbPathTo;
 
     @Override
     public QFFile getFile() {

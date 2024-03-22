@@ -2,7 +2,6 @@ package spectrum.qf.service;
 
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -21,11 +20,6 @@ import java.util.stream.Collectors;
 @Service
 @ConditionalOnProperty(value = "smb.enabled", havingValue = "false")
 public class QFFileServiceFSImpl extends QFFileServiceGlobal implements QFFileService {
-
-    @Value(value = "${file.root-dir}")
-    private String pathFrom;
-    @Value(value = "${file.dest-dir}")
-    private String pathTo;
 
     @Override
     public QFFile getFile() {

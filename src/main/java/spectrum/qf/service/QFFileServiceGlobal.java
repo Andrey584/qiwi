@@ -10,6 +10,14 @@ import org.springframework.beans.factory.annotation.Value;
 
 public abstract class QFFileServiceGlobal {
 
+    @Value(value = "${file.root-dir}")
+    protected String pathFrom;
+    @Value(value = "${file.dest-dir}")
+    protected String pathTo;
+    @Value(value = "${smb.from-dir}")
+    protected String smbPathFrom;
+    @Value(value = "${smb.dest-dir}")
+    protected String smbPathTo;
     @Value(value = "${options.delete-files}")
     protected Boolean deleteFiles;
     protected static final Logger logger = LoggerFactory.getLogger(QFFileServiceGlobal.class);
