@@ -22,3 +22,7 @@ pipeline {
                 sh './mvnw deploy'
             }
         }
+
+    }
+}
+
