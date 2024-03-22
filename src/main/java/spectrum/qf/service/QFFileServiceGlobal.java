@@ -23,7 +23,7 @@ public abstract class QFFileServiceGlobal {
     public boolean isValidNumberPhone(String name) {
         PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
         int index = name.indexOf(".");
-        String fileName = name;
+        String fileName;
         if (index != -1) {
             fileName = name.substring(0, name.indexOf("."));
         } else {
