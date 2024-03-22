@@ -11,7 +11,7 @@ import spectrum.qf.bean.QFFile;
 @RequiredArgsConstructor
 public class QFFileTransferService {
 
-    private static final long SLEEP_IN_MILLISECONDS = 3000;
+    private static final long SLEEP_IN_MILLISECONDS = 180000;
     private static final Logger logger = LoggerFactory.getLogger(QFFileTransferService.class);
     private volatile boolean isContinue = true;
 

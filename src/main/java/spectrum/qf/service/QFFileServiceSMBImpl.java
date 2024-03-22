@@ -50,15 +50,10 @@ public class QFFileServiceSMBImpl extends QFFileServiceGlobal implements QFFileS
 
         smbPathTo = smbPathTo.endsWith("/") ? smbPathTo : smbPathTo + "/";
 
-        SmbFile dateDestinationDir = null;
-        try {
-            dateDestinationDir = new SmbFile(smbPathTo + dateFolderName, auth);
-        } catch (MalformedURLException ignored) {
-            logger.error("Возникла ошибка во время попытки перемещения файла.");
-        }
-
+        SmbFile dateDestinationDir;
         SmbFile smbFile = null;
         try {
+            dateDestinationDir = new SmbFile(smbPathTo + dateFolderName, auth);
             smbFile = new SmbFile(getPathTo(dateDestinationDir) + "/" + fileName, auth);
         } catch (MalformedURLException | SmbException e) {
             logger.error("Возникла ошибка во время попытки перемещения файла.");

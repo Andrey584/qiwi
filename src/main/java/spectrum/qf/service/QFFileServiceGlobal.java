@@ -17,7 +17,7 @@ public abstract class QFFileServiceGlobal {
     protected static final long MILLISECONDS_IN_ONE_MINUTE = 60000;
 
 
-    public boolean isValidNumberPhone(String name) {
+    protected boolean isValidNumberPhone(String name) {
         PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
         int index = name.indexOf(".");
         String fileName;
@@ -30,7 +30,7 @@ public abstract class QFFileServiceGlobal {
             Phonenumber.PhoneNumber number = phoneNumberUtil.parse(fileName, null);
             return phoneNumberUtil.isValidNumber(number);
         } catch (NumberParseException e) {
-            logger.error("Не удалось проверить номер телефона файла с именем {} на валидность.", name);
+            logger.error("Номер телефона из имени файла {} невалидный. Переименуйте файл в корректный формат.", name);
             return false;
         }
     }
