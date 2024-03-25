@@ -21,12 +21,12 @@
         enabled: указывается true в случае, если чтение происходит по протоколу SMB и false в случае чтения с локального хранилища
         protocol:
             version: версия SMB-протокола (одной цифрой)
-        from-dir: указывается директория, откуда будут браться файлы в формате: smb://username:password@server.domain/root-dir, где root-dit - это папка, где находятся файлы. (например, smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/smb/
+        from-dir: указывается директория, откуда будут браться файлы. (формат: smb://username:password@server.domain.ru/service/files), где files - это папка, где лежат файлы, которые необходимо перенести в S3.
         domain: домен
         username: имя пользователя
         password: пароль
         service-name: сервис
-        dest-dir: путь до папки processed для файлов, перенесенных в S3 хранилище (формат: smb://username:password@server.domain.ru/service/processed), например smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/processed/)
+        dest-dir: путь до папки processed для файлов, перенесенных в S3 хранилище (формат: smb://username:password@server.domain.ru/service/processed), где processed - это конечная папка для файлов, которые были скопированы в S3.
     
     options: (указывается для настройки удаления/перемещения файлов, перемещенных в S3 хранилище)
         delete-files: true в случае, если после перемещения в S3 мы хотим удалять эти файлы и false в случае, если мы хотим их переносить в "dest-dir".
