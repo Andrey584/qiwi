@@ -21,7 +21,7 @@
         enabled: указывается true в случае, если чтение происходит по протоколу SMB и false в случае чтения с локального хранилища
         protocol:
             version: версия SMB-протокола (одной цифрой)
-        from-dir: smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/smb/
+        from-dir: указывается директория, откуда будут браться файлы в формате: smb://username:password@server.domain/root-dir, где root-dit - это папка, где находятся файлы. (например, smb://jenkins:jenkins@bkp01.it-spectrum.ru/smb-tst/smb/
         domain: домен
         username: имя пользователя
         password: пароль
