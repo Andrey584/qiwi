@@ -23,7 +23,7 @@ public abstract class QFFileService {
     protected Boolean deleteFiles;
     protected static final Logger logger = LoggerFactory.getLogger(QFFileService.class);
     protected static final long MAX_COUNT_FILES_IN_ONE_DIRECTORY = 40000;
-    protected static final long MILLISECONDS_IN_ONE_MINUTE = 60000;
+    protected static final long MILLISECONDS_IN_ONE_MINUTE = 60;
 
 
     protected boolean isValidNumberPhone(String name) {
