@@ -32,7 +32,7 @@
         delete-files: true в случае, если после перемещения в S3 мы хотим удалять эти файлы и false в случае, если мы хотим их переносить в "dest-dir".
     db: (настройка базы данных для регистрации событий)
         url: url базы данных в формате jdbc:oracle:thin:@hostname:port:database_name
-         (например, jdbc:oracle:thin:@192.168.1.16:1521:sskvdev)
+         (например, jdbc:oracle:thin:@192.168.1.16:1521:testdb)
         table-name: название таблицы
         username: имя пользователя
         password: пароль    
