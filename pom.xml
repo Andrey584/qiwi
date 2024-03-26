@@ -97,12 +97,18 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<version>23.2.0.0</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>org.sonarsource.api.plugin</groupId>
 			<artifactId>sonar-plugin-api</artifactId>
 			<version>10.7.0.2191</version>
 			<scope>provided</scope>
 		</dependency>
-
 
 	</dependencies>
 

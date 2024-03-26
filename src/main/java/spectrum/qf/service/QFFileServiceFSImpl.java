@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @ConditionalOnProperty(value = "smb.enabled", havingValue = "false")
-public class QFFileServiceFSImpl extends QFFileServiceGlobal implements QFFileService {
+public class QFFileServiceFSImpl extends QFFileService {
 
     @Override
     public QFFile getFile() {
