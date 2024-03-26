@@ -19,7 +19,7 @@ import java.util.Objects;
 @Service
 @ConditionalOnProperty(value = "smb.enabled", havingValue = "true")
 @RequiredArgsConstructor
-public class QFFileServiceSMBImpl extends QFFileServiceGlobal implements QFFileService {
+public class QFFileServiceSMBImpl extends QFFileService {
 
     private final NtlmPasswordAuthentication auth;
 
