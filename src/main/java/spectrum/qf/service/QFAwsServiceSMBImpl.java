@@ -1,6 +1,7 @@
 package spectrum.qf.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
@@ -27,7 +28,11 @@ public class QFAwsServiceSMBImpl extends QFAwsService {
         String pathFileTo = smbFile.getCanonicalPath();
         PutObjectRequest putObjectRequest = new PutObjectRequest(awsBucketName, smbFileName, pathFileTo);
         putObjectRequest.getRequestClientOptions().setReadLimit(1024 * 1024);
-        amazonS3.putObject(putObjectRequest);
+        try {
+            amazonS3.putObject(putObjectRequest);
+        } catch (AmazonS3Exception e) {
+            logger.error("Возникла ошибка при загрузке файла с именем {}", smbFileName);
+        }
         createDatabaseLog(smbFileName);
         logger.info("Файл с именем {} весом {} байт был успешно перемещен в S3 хранилище.", smbFileName, weight);
     }

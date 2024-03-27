@@ -1,6 +1,7 @@
 package spectrum.qf.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,12 @@ public class QFAwsServiceFSImpl extends QFAwsService {
         long fileWight = file.length();
         PutObjectRequest putObjectRequest = new PutObjectRequest(awsBucketName, fileName, file);
         putObjectRequest.getRequestClientOptions().setReadLimit(1024 * 1024);
-        amazonS3.putObject(new PutObjectRequest(awsBucketName, file.getName(), file));
+        try {
+            amazonS3.putObject(new PutObjectRequest(awsBucketName, fileName, file));
+        } catch (AmazonS3Exception e) {
+            logger.error("Возникла ошибка при загрузке файла с именем {}", fileName);
+        }
+
         createDatabaseLog(fileName);
         logger.info("Файл с именем {} весом {} байт успешно загружен в S3 хранилище.", fileName, fileWight);
     }
