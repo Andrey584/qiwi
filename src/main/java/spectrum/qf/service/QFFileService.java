@@ -3,10 +3,14 @@ package spectrum.qf.service;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import jcifs.smb.SmbException;
+import jcifs.smb.SmbFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import spectrum.qf.bean.QFFile;
+
+import java.io.File;
 
 
 public abstract class QFFileService {
@@ -33,22 +37,32 @@ public abstract class QFFileService {
 
     public abstract void move(QFFile file);
 
-    protected boolean isValidNumberPhone(String name) {
+    protected boolean isValidNumberPhone(String fileName) {
         PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-        int index = name.indexOf(".");
-        String fileName;
-        if (index != -1) {
-            fileName = name.substring(0, name.indexOf("."));
-        } else {
-            return false;
-        }
+        String phoneNumber = getPhoneNumberFromPhoneNumber(fileName);
         try {
-            Phonenumber.PhoneNumber number = phoneNumberUtil.parse(fileName, null);
+            Phonenumber.PhoneNumber number = phoneNumberUtil.parse(phoneNumber, null);
             return phoneNumberUtil.isValidNumber(number);
         } catch (NumberParseException e) {
-            logger.error("Номер телефона из имени файла {} невалидный. Переименуйте файл в корректный формат.", name);
+            logger.error("Номер телефона из имени файла {} невалидный. Переименуйте файл в корректный формат.", fileName);
             return false;
         }
     }
 
+    protected boolean checkFileForConditions(File file) {
+        return file.isFile()
+                && file.length() != 0
+                && System.currentTimeMillis() - file.lastModified() > MILLISECONDS_IN_ONE_MINUTE;
+    }
+
+    protected boolean checkSmbFileForConditions(SmbFile smbFile) throws SmbException {
+        return smbFile.isFile()
+                && smbFile.length() != 0
+                && System.currentTimeMillis() - smbFile.lastModified() > MILLISECONDS_IN_ONE_MINUTE;
+    }
+
+    private String getPhoneNumberFromPhoneNumber(String fileName) {
+        String fileNameWithoutExtension = fileName.substring(0, fileName.indexOf("."));
+        return fileNameWithoutExtension.startsWith("+") ? fileNameWithoutExtension : "+" + fileNameWithoutExtension;
+    }
 }

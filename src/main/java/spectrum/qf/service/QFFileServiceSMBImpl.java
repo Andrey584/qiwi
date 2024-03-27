@@ -79,9 +79,7 @@ public class QFFileServiceSMBImpl extends QFFileService {
     private SmbFile getAnyFile(SmbFile dir) throws SmbException {
         List<SmbFile> smbFiles = List.of(Objects.requireNonNull(dir.listFiles()));
         for (SmbFile childFile : smbFiles) {
-            if (childFile.isFile()
-                    && childFile.length() != 0
-                    && System.currentTimeMillis() - childFile.lastModified() > MILLISECONDS_IN_ONE_MINUTE) {
+            if (checkSmbFileForConditions(childFile)) {
                 if (needToValidatePhoneNumber) {
                     boolean isValidNumberPhone = isValidNumberPhone(childFile.getName());
                     if (isValidNumberPhone) {
@@ -91,8 +89,6 @@ public class QFFileServiceSMBImpl extends QFFileService {
                     return childFile;
 
                 }
-
-
             }
         }
         for (SmbFile childFile : smbFiles) {

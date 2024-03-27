@@ -35,9 +35,7 @@ public class QFFileServiceFSImpl extends QFFileService {
     private File getAnyFile(File directory) {
         List<File> childFiles = List.of(Objects.requireNonNull(directory.listFiles()));
         for (File childFile : childFiles) {
-            if (childFile.isFile()
-                    && childFile.length() != 0
-                    && System.currentTimeMillis() - childFile.lastModified() > MILLISECONDS_IN_ONE_MINUTE) {
+            if (checkFileForConditions(childFile)) {
                 if (needToValidatePhoneNumber) {
                     boolean isValidNumberPhone = isValidNumberPhone(childFile.getName());
                     if (isValidNumberPhone) {
