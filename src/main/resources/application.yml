@@ -21,6 +21,7 @@ smb:
   service-name:
 options:
   delete-files: false
+  validation-phone-number: false
 db:
   url:
   table-name: tmp_s3_files

@@ -82,11 +82,17 @@ public class QFFileServiceSMBImpl extends QFFileService {
             if (childFile.isFile()
                     && childFile.length() != 0
                     && System.currentTimeMillis() - childFile.lastModified() > MILLISECONDS_IN_ONE_MINUTE) {
-                //String fileName = childFile.getName();
-                //boolean isValidPhoneNumber = isValidNumberPhone(fileName);
-                //if (isValidPhoneNumber) {
+                if (needToValidatePhoneNumber) {
+                    boolean isValidNumberPhone = isValidNumberPhone(childFile.getName());
+                    if (isValidNumberPhone) {
+                        return childFile;
+                    }
+                } else {
                     return childFile;
-                //}
+
+                }
+
+
             }
         }
         for (SmbFile childFile : smbFiles) {

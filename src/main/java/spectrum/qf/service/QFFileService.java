@@ -21,10 +21,17 @@ public abstract class QFFileService {
     protected String smbPathTo;
     @Value(value = "${options.delete-files}")
     protected Boolean deleteFiles;
-    protected static final Logger logger = LoggerFactory.getLogger(QFFileService.class);
-    protected static final long MAX_COUNT_FILES_IN_ONE_DIRECTORY = 40000;
-    protected static final long MILLISECONDS_IN_ONE_MINUTE = 60;
+    @Value(value = "${options.validation-phone-number}")
+    protected Boolean needToValidatePhoneNumber;
 
+    protected static final Logger logger = LoggerFactory.getLogger(QFFileService.class);
+    protected static final long MAX_COUNT_FILES_IN_ONE_DIRECTORY = 50000;
+    protected static final long MILLISECONDS_IN_ONE_MINUTE = 60000;
+
+
+    public abstract QFFile getFile();
+
+    public abstract void move(QFFile file);
 
     protected boolean isValidNumberPhone(String name) {
         PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
@@ -44,7 +51,4 @@ public abstract class QFFileService {
         }
     }
 
-    public abstract QFFile getFile();
-
-    public abstract void move(QFFile file);
 }

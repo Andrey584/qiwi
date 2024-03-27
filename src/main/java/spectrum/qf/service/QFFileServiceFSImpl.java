@@ -38,11 +38,14 @@ public class QFFileServiceFSImpl extends QFFileService {
             if (childFile.isFile()
                     && childFile.length() != 0
                     && System.currentTimeMillis() - childFile.lastModified() > MILLISECONDS_IN_ONE_MINUTE) {
-                //String fileName = childFile.getName();
-                //boolean isValidNumberPhone = isValidNumberPhone(fileName);
-                //if (isValidNumberPhone) {
+                if (needToValidatePhoneNumber) {
+                    boolean isValidNumberPhone = isValidNumberPhone(childFile.getName());
+                    if (isValidNumberPhone) {
+                        return childFile;
+                    }
+                } else {
                     return childFile;
-                //}
+                }
             }
         }
         for (File childFile : childFiles) {
