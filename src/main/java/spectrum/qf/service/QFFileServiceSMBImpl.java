@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @ConditionalOnProperty(value = "smb.enabled", havingValue = "true")
@@ -76,11 +77,19 @@ public class QFFileServiceSMBImpl extends QFFileService {
         }
     }
 
-    private SmbFile getAnyFile(SmbFile dir) throws SmbException {
-        List<SmbFile> smbFiles = List.of(Objects.requireNonNull(dir.listFiles()));
+    private SmbFile getAnyFile(SmbFile directory) throws SmbException, MalformedURLException {
+        Optional<List<SmbFile>> smbFilesOptional = Optional.of(List.of(Objects.requireNonNull(directory.listFiles())));
+        if (smbFilesOptional.get().isEmpty()) {
+            if (!smbPathFrom.equalsIgnoreCase(directory.getPath())) {
+                directory.delete();
+                SmbFile smbFile = new SmbFile(directory.getParent(), auth);
+                return getAnyFile(smbFile);
+            }
+        }
+        List<SmbFile> smbFiles = smbFilesOptional.get();
         for (SmbFile childFile : smbFiles) {
             if (checkSmbFileForConditions(childFile)) {
-                if (needToValidatePhoneNumber) {
+                if (isNeedToValidatePhoneNumber) {
                     boolean isValidNumberPhone = isValidNumberPhone(childFile.getName());
                     if (isValidNumberPhone) {
                         return childFile;

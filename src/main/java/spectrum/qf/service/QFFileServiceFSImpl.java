@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,10 +34,17 @@ public class QFFileServiceFSImpl extends QFFileService {
     }
 
     private File getAnyFile(File directory) {
-        List<File> childFiles = List.of(Objects.requireNonNull(directory.listFiles()));
+        Optional<List<File>> childFilesOptional = Optional.of(List.of(Objects.requireNonNull(directory.listFiles())));
+        if (childFilesOptional.get().isEmpty()) {
+            if (!pathFrom.equalsIgnoreCase(directory.getPath())) {
+                directory.delete();
+                return getAnyFile(directory.getParentFile());
+            }
+        }
+        List<File> childFiles = childFilesOptional.get();
         for (File childFile : childFiles) {
             if (checkFileForConditions(childFile)) {
-                if (needToValidatePhoneNumber) {
+                if (isNeedToValidatePhoneNumber) {
                     boolean isValidNumberPhone = isValidNumberPhone(childFile.getName());
                     if (isValidNumberPhone) {
                         return childFile;

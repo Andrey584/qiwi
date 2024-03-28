@@ -39,7 +39,7 @@ public abstract class QFAwsService {
             statement.executeUpdate();
 
         } catch (SQLException e) {
-            logger.error("Не удалось записать лог в Базу Данных для файла с именем " + fileName);
+            logger.error("Не удалось зарегистрировать событие в Базу Данных для файла с именем " + fileName);
         }
     }
 }
