@@ -66,12 +66,4 @@ public abstract class QFFileService {
         filePhoneNumberFromFileName = filePhoneNumberFromFileName.startsWith("8") ? filePhoneNumberFromFileName.replaceFirst("8", "+7") : filePhoneNumberFromFileName;
         return filePhoneNumberFromFileName.startsWith("+") ? filePhoneNumberFromFileName : "+" + filePhoneNumberFromFileName;
     }
-
-    @PostConstruct
-    public void checkPathFrom() {
-        if (pathFrom.contains("/") || pathTo.contains("/"))
-            throw new RuntimeException("Проверьте pathFrom и pathTo из файла конфигурации. Данные некорректны.");
-        logger.error("Проверьте pathFrom и pathTo из файла конфигурации. Данные некорректны.");
-    }
-
 }
