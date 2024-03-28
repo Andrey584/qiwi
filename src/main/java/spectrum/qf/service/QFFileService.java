@@ -32,7 +32,6 @@ public abstract class QFFileService {
     protected static final long MAX_COUNT_FILES_IN_ONE_DIRECTORY = 50000;
     protected static final long MILLISECONDS_IN_ONE_MINUTE = 60000;
 
-
     public abstract QFFile getFile();
 
     public abstract void move(QFFile file);

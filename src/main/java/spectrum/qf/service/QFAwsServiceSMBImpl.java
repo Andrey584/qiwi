@@ -23,7 +23,7 @@ public class QFAwsServiceSMBImpl extends QFAwsService {
         try {
             weight = smbFile.length();
         } catch (SmbException e) {
-            logger.error("Не удалось вычислить длину файла с именем {}", smbFile.getName());
+            logger.error("Не удалось вычислить длину файла с именем {}", smbFileName);
         }
         String pathFileTo = smbFile.getCanonicalPath();
         PutObjectRequest putObjectRequest = new PutObjectRequest(awsBucketName, smbFileName, pathFileTo);
