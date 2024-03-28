@@ -3,6 +3,7 @@ package spectrum.qf.service;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import jakarta.annotation.PostConstruct;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import org.slf4j.Logger;
@@ -64,6 +65,13 @@ public abstract class QFFileService {
         String filePhoneNumberFromFileName = fileName.replaceAll("[^0-9]", "");
         filePhoneNumberFromFileName = filePhoneNumberFromFileName.startsWith("8") ? filePhoneNumberFromFileName.replaceFirst("8", "+7") : filePhoneNumberFromFileName;
         return filePhoneNumberFromFileName.startsWith("+") ? filePhoneNumberFromFileName : "+" + filePhoneNumberFromFileName;
-
     }
+
+    @PostConstruct
+    public void checkPathFrom() {
+        if (pathFrom.contains("/") || pathTo.contains("/"))
+            throw new RuntimeException("Проверьте pathFrom и pathTo из файла конфигурации. Данные некорректны.");
+        logger.error("Проверьте pathFrom и pathTo из файла конфигурации. Данные некорректны.");
+    }
+
 }
