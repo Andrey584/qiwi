@@ -78,12 +78,14 @@ public class QFFileServiceSMBImpl extends QFFileService {
     }
 
     private SmbFile getAnyFile(SmbFile directory) throws SmbException, MalformedURLException {
-        Optional<List<SmbFile>> smbFilesOptional = Optional.of(List.of(Objects.requireNonNull(directory.listFiles())));
+        String dirPath = directory.getCanonicalPath().endsWith("/") ? directory.getCanonicalPath() : directory.getCanonicalPath() + "/";
+        Optional<List<SmbFile>> smbFilesOptional = Optional.of(List.of(Objects.requireNonNull(new SmbFile(dirPath, auth).listFiles())));
         if (smbFilesOptional.get().isEmpty()) {
-            if (!smbPathFrom.equalsIgnoreCase(directory.getPath())) {
-                directory.delete();
-                SmbFile smbFile = new SmbFile(directory.getParent(), auth);
-                return getAnyFile(smbFile);
+            smbPathFrom = smbPathFrom.endsWith("/") ? smbPathFrom : smbPathFrom + "/";
+            if (!smbPathFrom.equalsIgnoreCase(dirPath)) {
+                    directory.delete();
+                    SmbFile smbFile = new SmbFile(directory.getParent() + "/", auth);
+                    return getAnyFile(smbFile);
             }
         }
         List<SmbFile> smbFiles = smbFilesOptional.get();
