@@ -26,7 +26,7 @@ public abstract class QFFileService {
     @Value(value = "${options.delete-files}")
     protected Boolean deleteFiles;
     @Value(value = "${options.validation-phone-number}")
-    protected Boolean needToValidatePhoneNumber;
+    protected Boolean isNeedToValidatePhoneNumber;
 
     protected static final Logger logger = LoggerFactory.getLogger(QFFileService.class);
     protected static final long MAX_COUNT_FILES_IN_ONE_DIRECTORY = 50000;
@@ -39,7 +39,7 @@ public abstract class QFFileService {
 
     protected boolean isValidNumberPhone(String fileName) {
         PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-        String phoneNumber = getPhoneNumberFromPhoneNumber(fileName);
+        String phoneNumber = getPhoneNumberFromFileName(fileName);
         try {
             Phonenumber.PhoneNumber number = phoneNumberUtil.parse(phoneNumber, null);
             return phoneNumberUtil.isValidNumber(number);
@@ -61,7 +61,7 @@ public abstract class QFFileService {
                 && System.currentTimeMillis() - smbFile.lastModified() > MILLISECONDS_IN_ONE_MINUTE;
     }
 
-    private String getPhoneNumberFromPhoneNumber(String fileName) {
+    private String getPhoneNumberFromFileName(String fileName) {
         String fileNameWithoutExtension = fileName.substring(0, fileName.indexOf("."));
         return fileNameWithoutExtension.startsWith("+") ? fileNameWithoutExtension : "+" + fileNameWithoutExtension;
     }
