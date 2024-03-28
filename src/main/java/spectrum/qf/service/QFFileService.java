@@ -61,7 +61,9 @@ public abstract class QFFileService {
     }
 
     private String getPhoneNumberFromFileName(String fileName) {
-        String fileNameWithoutExtension = fileName.substring(0, fileName.indexOf("."));
-        return fileNameWithoutExtension.startsWith("+") ? fileNameWithoutExtension : "+" + fileNameWithoutExtension;
+        String filePhoneNumberFromFileName = fileName.replaceAll("[^0-9]", "");
+        filePhoneNumberFromFileName = filePhoneNumberFromFileName.startsWith("8") ? filePhoneNumberFromFileName.replaceFirst("8", "+7") : filePhoneNumberFromFileName;
+        return filePhoneNumberFromFileName.startsWith("+") ? filePhoneNumberFromFileName : "+" + filePhoneNumberFromFileName;
+
     }
 }
