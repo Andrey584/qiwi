@@ -28,12 +28,13 @@ public class QFFileServiceFSImpl extends QFFileService {
             File rootDir = ResourceUtils.getFile(pathFrom);
             return QFFile.of(getAnyFile(rootDir));
         } catch (FileNotFoundException e) {
-            logger.error("Указанный путь не является директорией. Приложение остановлено. Проверьте параметры запуска.");
-            throw new RuntimeException(e);
+            logger.error("Исходной папки по указанному пути не существует. Проверьте исходный каталог на наличие.");
+            throw new RuntimeException("Исходной папки по указанному пути не существует. Проверьте исходный каталог на наличие.");
         }
     }
 
     private File getAnyFile(File directory) {
+        checkExistRootFolder();
         Optional<List<File>> childFilesOptional = Optional.of(List.of(Objects.requireNonNull(directory.listFiles())));
         if (childFilesOptional.get().isEmpty()) {
             if (!pathFrom.equalsIgnoreCase(directory.getPath())) {
@@ -43,6 +44,7 @@ public class QFFileServiceFSImpl extends QFFileService {
 
                 if (!checkPathFrom.equalsIgnoreCase(checkDirectoryPath)) {
                     directory.delete();
+                    checkExistRootFolder();
                     return getAnyFile(directory.getParentFile());
                 }
             }
@@ -70,6 +72,7 @@ public class QFFileServiceFSImpl extends QFFileService {
 
     @Override
     public void move(QFFile qfFile) {
+        checkExistRootFolder();
         File fileFrom = qfFile.getFile();
         String fileName = fileFrom.getName();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd/");
@@ -92,6 +95,7 @@ public class QFFileServiceFSImpl extends QFFileService {
             } catch (IOException e) {
                 logger.info("Файл с именем {} уже существует в папке processed. Новый файл заменит уже существующий.", fileName);
                 boolean isDeleted = fileDest.delete();
+                this.move(QFFile.of(fileFrom));
                 if (!isDeleted) {
                     logger.error("Ошибка во время удаления файла с именем {}. Новый файл не заменит уже существующий.", fileName);
                 }
@@ -151,6 +155,14 @@ public class QFFileServiceFSImpl extends QFFileService {
         File newDirNumber = new File(dir.getParentFile().getPath() + "/" + dirNumberName + "/");
         newDirNumber.mkdirs();
         return newDirNumber;
+    }
+
+    private void checkExistRootFolder() {
+        File rootDir = new File(pathFrom);
+        if (!rootDir.exists()) {
+            logger.error("Исходной папки по указанному пути не существует. Проверьте исходный каталог на наличие.");
+            throw new RuntimeException("Исходной папки по указанному пути не существует. Проверьте исходный каталог на наличие");
+        }
     }
 
 }

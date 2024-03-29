@@ -27,7 +27,7 @@ public class QFAwsServiceFSImpl extends QFAwsService {
         try {
             amazonS3.putObject(new PutObjectRequest(awsBucketName, fileName, file));
         } catch (AmazonS3Exception e) {
-            logger.error("Возникла ошибка при загрузке файла с именем {}", fileName);
+            //logger.error("Возникла ошибка при загрузке файла с именем {}", fileName);
         }
 
         createDatabaseLog(fileName);

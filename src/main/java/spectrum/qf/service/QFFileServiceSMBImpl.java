@@ -30,13 +30,14 @@ public class QFFileServiceSMBImpl extends QFFileService {
             SmbFile smbFile = new SmbFile(smbPathFrom, auth);
             return QFFile.of(getAnyFile(smbFile));
         } catch (IOException e) {
-            logger.error("Ошибка при чтении файла.");
+            logger.error("Исходная папка по указанному пути не существует. Проверьте исходный каталог на наличие.");
         }
         return null;
     }
 
     @Override
     public void move(QFFile qfFile) {
+        checkExistRootFolder();
         SmbFile fileFrom = qfFile.getSmbFile();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd/");
         String dateFolderName = dateFormat.format(new Date());
@@ -49,7 +50,7 @@ public class QFFileServiceSMBImpl extends QFFileService {
         SmbFile smbFile = null;
         try {
             dateDestinationDir = new SmbFile(smbPathTo + dateFolderName, auth);
-            smbFile = new SmbFile(getPathTo(dateDestinationDir) + "/" + fileName, auth);
+            smbFile = new SmbFile(getPathTo(dateDestinationDir) + fileName, auth);
         } catch (MalformedURLException | SmbException e) {
             logger.error("Возникла ошибка во время попытки перемещения файла.");
         }
@@ -68,7 +69,8 @@ public class QFFileServiceSMBImpl extends QFFileService {
             } catch (SmbException e) {
                 logger.info("Файл с именем {} уже существует в папке processed. Новый файл заменит уже существующий.", fileName);
                 try {
-                    fileFrom.delete();
+                    smbFile.delete();
+                    fileFrom.renameTo(smbFile);
                     logger.info("Файл с именем {} был успешно перезаписан в папку processed после копирования в S3 хранилище.", fileName);
                 } catch (SmbException ex) {
                     logger.error("Файл с именем {} не удалось удалить из папки processed. Новый файл не заменит уже существующий.", fileName);
@@ -83,9 +85,10 @@ public class QFFileServiceSMBImpl extends QFFileService {
         if (smbFilesOptional.get().isEmpty()) {
             smbPathFrom = smbPathFrom.endsWith("/") ? smbPathFrom : smbPathFrom + "/";
             if (!smbPathFrom.equalsIgnoreCase(dirPath)) {
-                    directory.delete();
-                    SmbFile smbFile = new SmbFile(directory.getParent() + "/", auth);
-                    return getAnyFile(smbFile);
+                directory.delete();
+                checkExistRootFolder();
+                SmbFile smbFile = new SmbFile(directory.getParent() + "/", auth);
+                return getAnyFile(smbFile);
             }
         }
         List<SmbFile> smbFiles = smbFilesOptional.get();
@@ -164,6 +167,19 @@ public class QFFileServiceSMBImpl extends QFFileService {
         return newDirNumber;
     }
 
+    private void checkExistRootFolder() {
+        SmbFile smbFile;
+        try {
+            smbFile = new SmbFile(smbPathFrom, auth);
+            if (!smbFile.exists()) {
+                logger.error("Исходной папки по указанному пути не существует. Проверьте исходный каталог на наличие.");
+                throw new RuntimeException("Исходной папки по указанному пути не существует. Проверьте исходный каталог на наличие");
+            }
+        } catch (SmbException | MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
 
 

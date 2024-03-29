@@ -31,7 +31,7 @@ public class QFAwsServiceSMBImpl extends QFAwsService {
         try {
             amazonS3.putObject(putObjectRequest);
         } catch (AmazonS3Exception e) {
-            logger.error("Возникла ошибка при загрузке файла с именем {}", smbFileName);
+            //logger.error("Возникла ошибка при загрузке файла с именем {}", smbFileName);
         }
         createDatabaseLog(smbFileName);
         logger.info("Файл с именем {} весом {} байт был успешно перемещен в S3 хранилище.", smbFileName, weight);
