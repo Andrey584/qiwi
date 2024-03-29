@@ -37,8 +37,14 @@ public class QFFileServiceFSImpl extends QFFileService {
         Optional<List<File>> childFilesOptional = Optional.of(List.of(Objects.requireNonNull(directory.listFiles())));
         if (childFilesOptional.get().isEmpty()) {
             if (!pathFrom.equalsIgnoreCase(directory.getPath())) {
-                directory.delete();
-                return getAnyFile(directory.getParentFile());
+                String directoryPath = directory.getPath();
+                String checkPathFrom = pathFrom.endsWith("\\") || pathFrom.endsWith("/") ? pathFrom.substring(0, pathFrom.length() - 1) : pathFrom;
+                String checkDirectoryPath = directoryPath.endsWith("\\") || directoryPath.endsWith("/") ? directoryPath.substring(0, directoryPath.length() - 1) : directoryPath;
+
+                if (!checkPathFrom.equalsIgnoreCase(checkDirectoryPath)) {
+                    directory.delete();
+                    return getAnyFile(directory.getParentFile());
+                }
             }
         }
         List<File> childFiles = childFilesOptional.get();
