@@ -65,15 +65,15 @@ public class QFFileServiceSMBImpl extends QFFileService {
         } else {
             try {
                 fileFrom.renameTo(smbFile);
-                logger.info("Файл с именем {} успешно перемещен в папку processed после копирования в S3 хранилище.", fileName);
+                logger.info("Файл с именем {} успешно перемещен в папку {} после копирования в S3 хранилище.", fileName, destDirFolderName);
             } catch (SmbException e) {
-                logger.info("Файл с именем {} уже существует в папке processed. Новый файл заменит уже существующий.", fileName);
+                logger.info("Файл с именем {} уже существует в папке {}. Новый файл заменит уже существующий.", fileName, destDirFolderName);
                 try {
                     smbFile.delete();
                     fileFrom.renameTo(smbFile);
-                    logger.info("Файл с именем {} был успешно перезаписан в папку processed после копирования в S3 хранилище.", fileName);
+                    logger.info("Файл с именем {} был успешно перезаписан в папку {} после копирования в S3 хранилище.", fileName, destDirFolderName);
                 } catch (SmbException ex) {
-                    logger.error("Файл с именем {} не удалось удалить из папки processed. Новый файл не заменит уже существующий.", fileName);
+                    logger.error("Файл с именем {} не удалось удалить из папки {}. Новый файл не заменит уже существующий.", fileName, destDirFolderName);
                 }
             }
         }

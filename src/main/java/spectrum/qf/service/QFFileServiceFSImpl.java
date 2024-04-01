@@ -91,13 +91,13 @@ public class QFFileServiceFSImpl extends QFFileService {
         } else {
             try {
                 FileUtils.moveFile(fileFrom, fileDest);
-                logger.info("Файл с именем {} успешно перемещен в папку processed после копирования в S3 хранилище.", fileName);
+                logger.info("Файл с именем {} успешно перемещен в папку {} после копирования в S3 хранилище.", fileName, destDirFolderName);
             } catch (IOException e) {
-                logger.info("Файл с именем {} уже существует в папке processed. Новый файл заменит уже существующий.", fileName);
+                logger.info("Файл с именем {} уже существует в папке {}. Новый файл заменит уже существующий.", fileName, destDirFolderName);
                 boolean isDeleted = fileDest.delete();
                 this.move(QFFile.of(fileFrom));
                 if (!isDeleted) {
-                    logger.error("Ошибка во время удаления файла с именем {}. Новый файл не заменит уже существующий.", fileName);
+                    logger.error("Ошибка во время удаления файла с именем {} из папки {}. Новый файл не заменит уже существующий.", fileName, destDirFolderName);
                 }
             }
         }

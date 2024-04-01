@@ -28,6 +28,8 @@ public abstract class QFFileService {
     protected Boolean deleteFiles;
     @Value(value = "${options.validation-phone-number}")
     protected Boolean isNeedToValidatePhoneNumber;
+    @Value(value = "${file.dest-dir-folder-name}")
+    protected String destDirFolderName;
 
     protected static final Logger logger = LoggerFactory.getLogger(QFFileService.class);
     protected static final long MAX_COUNT_FILES_IN_ONE_DIRECTORY = 50000;
