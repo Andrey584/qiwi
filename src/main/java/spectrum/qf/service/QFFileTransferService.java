@@ -4,12 +4,16 @@ import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import spectrum.qf.bean.QFFile;
 
 @Service
 @RequiredArgsConstructor
 public class QFFileTransferService {
+
+    @Value(value = "${options.cycle}")
+    private Boolean inCycle;
 
     private static final long SLEEP_IN_MILLISECONDS = 180000;
     private static final Logger logger = LoggerFactory.getLogger(QFFileTransferService.class);
@@ -23,7 +27,12 @@ public class QFFileTransferService {
             QFFile file = qfFileService.getFile();
             if (file == null || (file.getFile() == null && file.getSmbFile() == null)) {
                 logger.info("Нет подходящих файлов.");
-                sleep();
+                if (inCycle) {
+                    sleep();
+                } else {
+                    logger.info("Приложение завершило свою работу.");
+                    System.exit(0);
+                }
             } else {
                 qfAwsService.upload(file);
                 qfFileService.move(file);
